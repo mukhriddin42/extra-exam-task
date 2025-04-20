@@ -1,0 +1,272 @@
+@import url(https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@100;200;300;400;500;600;800;900&display=swap);
+@import url(https://fonts.googleapis.com/css2?family=Julius+Sans+One&display=swap);
+
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Julius Sans One', sans-serif;
+    background-color: #f4f4f4;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+
+
+  header {
+    background-color: #333;
+    color: white;
+    padding: 1rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+
+  .header-left h1 {
+    font-size: 1.5rem;
+  }
+
+  .header-right {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+  }
+
+  .header-right input[type="text"] {
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
+    border: none;
+  }
+
+  .header-right button {
+    padding: 0.4rem 0.8rem;
+    background-color: crimson;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+  }
+
+  main {
+    flex: 1;
+    padding: 2rem;
+  }
+
+  .container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .card {
+    position: relative;
+    background-color: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    cursor: pointer;
+  }
+
+
+  .card img {
+    width: 100%;
+    display: block;
+  }
+
+  .modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #EFF3EA;
+    border-radius: 14px;
+    padding: 20px;
+    width: 800px;
+    z-index: 100;
+  }
+
+  .modal-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    gap: 25px;
+  }
+  .modal-img {
+    width: 300px;
+    border-radius: 8px;
+  }
+
+  .btn {
+    position: absolute;
+    background: transparent;
+  }
+
+  .like-btn {
+    position: absolute;
+    top: 20px;
+    right: 60px;
+    background: transparent;
+    border:none;
+    font-size: 24px;
+    cursor: pointer;
+    color: red;
+    transition: all .3s;
+  }
+
+  .close-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: transparent;
+    border:none;
+    font-size: 24px;
+    cursor: pointer;
+    transition: all .3s;
+  }
+  .like-btn:hover {
+    transform: scale(1.1);
+  }
+
+  .close-btn:hover {
+    transform: scale(1.1);
+  }
+  .creater-name,
+  .description, 
+  .likes-count {
+    font-size: 18px;
+    margin-top: 15px;
+    font-weight: 600;
+  }
+
+  .creater-name span,
+  .description span, 
+  .likes-count span {
+    font-weight: 500;
+  }
+
+  .overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3));
+    backdrop-filter: blur(2px);
+    z-index: 20;
+  }
+
+  .hidden {
+    display: none;
+  }
+
+
+  /* Liked pictures modal */
+  .liked {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 0 20px 20px 20px;
+    background: #fff;
+    margin-top: 20px;
+    height: 90vh;
+    overflow-y: scroll;
+    border-radius: 14px;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
+    z-index: 50;
+  }
+
+  .liked::-webkit-scrollbar {
+    height: 8px;
+    width: 8px;
+  }
+
+  .liked::-webkit-scrollbar-track {
+    background-color:lavender;
+    border-radius: 16px;
+    margin: 10px 0;
+  }
+
+  .liked::-webkit-scrollbar-thumb {
+    background-color:ivory;
+    border-radius: 16px;
+  }
+
+  .liked-header {
+    position: sticky;
+    top: 1px;
+    left: 0;
+    background:#fff;
+    padding: 20px 0 20px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 70;
+  }
+
+  .close-liked-btn {
+    position: static;
+    display: inline-block;
+    cursor: pointer;
+    font-size: 22px;
+    background: transparent;
+    border: none;
+  }
+
+
+  .liked-elements-container {
+    margin-top: 40px;
+    display: grid;
+    grid-template-columns: repeat(4, 300px);
+    justify-content: space-between;
+    gap: 25px;
+  }
+
+  .liked-element {
+    position: relative;
+  }
+  .liked-element img {
+    width: 100%;
+    border-radius: 8px;
+  }
+
+  .liked-element .remove-btn {
+    position: absolute;
+    right: 17px;
+    top: 20px;
+    color: #FFA955;
+    cursor: pointer;
+    font-size: 22px;
+    background: transparent;
+    border: none;
+    transition: all .4s;
+  }
+
+  .liked-element .remove-btn:hover {
+    color: crimson;
+  }
+
+  .liked-element .download-btn {
+    position: absolute;
+    right: 15px;
+    top: 60px;
+    cursor: pointer;
+    font-size: 22px;
+    background: transparent;
+    border: none;
+    color: #3D90D7;
+    transition: all .3s;
+  }
+
+  .liked-element .download-btn:hover {
+    color: #03A791;
+  }
+
+
