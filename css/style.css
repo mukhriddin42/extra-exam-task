@@ -176,6 +176,8 @@
     padding: 0 20px 20px 20px;
     background: #fff;
     margin-top: 20px;
+    max-width: 1200px;
+    width: 100%;
     height: 90vh;
     overflow-y: scroll;
     border-radius: 14px;
@@ -224,9 +226,9 @@
   .liked-elements-container {
     margin-top: 40px;
     display: grid;
-    grid-template-columns: repeat(4, 300px);
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
     justify-content: space-between;
-    gap: 25px;
   }
 
   .liked-element {
@@ -268,5 +270,3 @@
   .liked-element .download-btn:hover {
     color: #03A791;
   }
-
-

@@ -1,21 +1,46 @@
+// access key
+const accessKey = "XhTZcZ2WZ8B6gFF-gY_lltGTJmq8xqtLdl6v7g39vaw";
+
+// Kerakli DOM elementlarini tanlab olish
 const container = document.getElementById("container");
 const modal = document.getElementById("modal");
 const overlay = document.getElementById("overlay");
 const headerLikedBtn = document.getElementById("header-liked-btn");
 const likedModal = document.getElementById("liked");
 const closeLikedBtn = document.getElementById("close-liked-btn");
+const searchInput = document.getElementById("search-input");
 
 
-const accessKey = "XhTZcZ2WZ8B6gFF-gY_lltGTJmq8xqtLdl6v7g39vaw";
-
-
+// Har window yangilanganda getData funksiyasi ishlasin
 window.addEventListener("DOMContentLoaded", () => {
     getData();
 })
 
+
+let interval;
+
+// Inputga yozilganda rasm chiqishi
+searchInput.addEventListener("input", async (e) => {
+  console.log(e.target.value);
+  const query = e.target.value;
+  clearInterval(interval);
+
+  interval = setTimeout(async () => {
+    try {
+      const data = await fetch(`https://api.unsplash.com/photos?query=${query}&client_id=${accessKey}`);
+      const response = await data.json();
+      console.log(response);
+      displayData(response)
+    } catch (error) {
+      alert("Bir dunyo xatolik: ", error)
+    }
+  }, 500);
+})
+
+// api dan ma'lumotlarni olib kelish
 async function getData() {
     try {
-      const response = await fetch(`https://api.unsplash.com/photos/?client_id=${accessKey}&per_page=4`);
+      const response = await fetch(`https://api.unsplash.com/photos/?client_id=${accessKey}&per_page=5`);
       if (!response.ok) {
         throw new Error(`Response status: ${response.status}`);
       }
@@ -27,13 +52,15 @@ async function getData() {
   }
 
   
-
+// ma'lumotlarni massiv shaklida olib har bitta massiv elementii renderCardga berish
 function displayData(data){
     data.forEach(element => {
         renderCard(element)
     });
 }
 
+
+// massivning harbir elementini HTMLga qo'shish
 function renderCard(element){
     const imageCard = document.createElement("div");
     imageCard.classList.add("card");
@@ -46,6 +73,7 @@ function renderCard(element){
 
 
 
+// modal uchun id berganda bitta image ni api dan olish
 async function getOneImage(id) {
     try {
       const response = await fetch(`https://api.unsplash.com/photos/${id}?client_id=${accessKey}`);
@@ -54,7 +82,7 @@ async function getOneImage(id) {
       }
   
       const json = await response.json();
-      console.log(json);
+      // console.log(json);
       renderModal(json);
     } catch (error) {
       console.error(error.message);
@@ -62,8 +90,7 @@ async function getOneImage(id) {
   }
 
 
-
-
+// bazadan kelgan itemni modalda ko'rsatish
 function renderModal(item){
     const modalContent = document.createElement("div");
     modalContent.classList.add("modal-content");
@@ -80,16 +107,24 @@ function renderModal(item){
     `
     modal.appendChild(modalContent)
 }
+
+
+
 container.addEventListener("click", (event) => {
     const dataID = event.target.getAttribute("data-id")
+    console.log(event.target.parentElement);
     if(event.target.classList.contains("card-image")){
-        modal.classList.remove("hidden")
-        overlay.classList.remove("hidden")
-        getOneImage(dataID)
+        showLoading(event.target.parentElement, event.target.src, dataID)
     }
 
-
 })
+
+function showLoading(card, src, dataID) {
+  // card.innerHTML = "<h2>Loading...</h2>";
+  modal.classList.remove("hidden")
+  overlay.classList.remove("hidden")
+  getOneImage(dataID)
+}
 
 const closeBtn = document.getElementById("close-btn");
 
@@ -101,32 +136,33 @@ closeBtn.addEventListener("click", () => {
 })
 
 
-let isLike = false;
+
+// modal chiqqandan kiyin like bosilganda bo'ladigan jarayon
 function toLiked(likeBtn){
-    console.log(likeBtn.getAttribute("data-id"));
+    const img_id = likeBtn.getAttribute("data-id");
+
+    let likedItems = JSON.parse(localStorage.getItem("likedItems")) || [];
     
-    isLike = (!isLike);
-    if(isLike){
-        addToLiked()
+    if(!likedItems.includes(img_id)) {
+      likedItems.push(img_id);
+      localStorage.setItem("likedItems", JSON.stringify(likedItems));
+      likeBtn.children[0].classList.add("fa-solid")
     } else {
-        removeFromLiked()
+      const removedLike = likedItems.filter(item => item !== img_id);
+      localStorage.setItem("likedItems", JSON.stringify(removedLike));
+      likeBtn.children[0].classList.remove("fa-solid")
     }
-    const likeBtnChild = likeBtn.getElementsByTagName("i")[0]
-    likeBtnChild.classList.toggle("fa-solid")
+    // checkIsLiked();
 }
 
-function toLiked2(item) {
-  console.log(item);
-}
-
-function addToLiked(){
-    console.log("Like bosildi");
-}
-
-function removeFromLiked() {
-    console.log("Like olib tashlandi");
-}
-
+// function checkIsLiked(id) {
+//   const likedPhotos = JSON.parse(localStorage.getItem('liked') || '[]');
+//   return `${
+//     likedPhotos.includes(id)
+//       ? '<i class="bx bxs-heart"></i>'
+//       : '<i class="bx bx-heart"></i>'
+//   }`;
+// }
 
 headerLikedBtn.addEventListener("click", () => {
   likedModal.classList.remove("hidden");
